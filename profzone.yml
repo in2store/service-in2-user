@@ -1,0 +1,10 @@
+name: service-in2-user
+group: in2
+version: 0.0.0
+description: 用户服务
+program_language: golang
+workflow:
+  extends: feature-pr
+scripts:
+  build: go build -v -o $PROJECT_NAME && libtools swagger
+  test: go test
