@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	"github.com/in2store/service-in2-user/database"
 	"github.com/in2store/service-in2-user/global"
 	"github.com/in2store/service-in2-user/modules/user"
 	"github.com/johnnyeven/libtools/courier"
@@ -30,6 +31,11 @@ func (req GetUsers) Path() string {
 	return ""
 }
 
+type GetUsersResponse struct {
+	Data  database.UserList `json:"data"`
+	Total int32             `json:"total"`
+}
+
 func (req GetUsers) Output(ctx context.Context) (result interface{}, err error) {
 	db := global.Config.SlaveDB.Get()
 	request := user.GetUsersParams{
@@ -46,5 +52,8 @@ func (req GetUsers) Output(ctx context.Context) (result interface{}, err error) 
 	if count == 0 {
 		return nil, nil
 	}
-	return resp[0], nil
+	return GetUsersResponse{
+		Data:  resp,
+		Total: count,
+	}, nil
 }
