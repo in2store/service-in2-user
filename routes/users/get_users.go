@@ -31,7 +31,7 @@ func (req GetUsers) Path() string {
 	return ""
 }
 
-type GetUsersResponse struct {
+type GetUsersResult struct {
 	Data  database.UserList `json:"data"`
 	Total int32             `json:"total"`
 }
@@ -52,7 +52,7 @@ func (req GetUsers) Output(ctx context.Context) (result interface{}, err error) 
 	if count == 0 {
 		return nil, nil
 	}
-	return GetUsersResponse{
+	return GetUsersResult{
 		Data:  resp,
 		Total: count,
 	}, nil
