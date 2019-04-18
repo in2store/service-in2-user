@@ -1,6 +1,8 @@
 package global
 
 import (
+	"github.com/johnnyeven/eden-library/clients/client_id"
+	"github.com/johnnyeven/libtools/courier/client"
 	"github.com/johnnyeven/libtools/courier/transport_http"
 	"github.com/johnnyeven/libtools/log"
 	"github.com/johnnyeven/libtools/servicex"
@@ -23,6 +25,8 @@ var Config = struct {
 
 	MasterDB *mysql.MySQL
 	SlaveDB  *mysql.MySQL
+
+	ClientID *client_id.ClientID
 }{
 	Log: &log.Log{
 		Level: "DEBUG",
@@ -45,5 +49,11 @@ var Config = struct {
 		User:     "root",
 		Password: "123456",
 		Host:     "127.0.0.1",
+	},
+
+	ClientID: &client_id.ClientID{
+		Client: client.Client{
+			Host: "service-id.profzone.service.profzone.net",
+		},
 	},
 }
