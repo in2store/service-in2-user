@@ -2,8 +2,11 @@ package users
 
 import (
 	"context"
+	"github.com/in2store/service-in2-user/global"
+	"github.com/in2store/service-in2-user/modules/user"
 	"github.com/johnnyeven/libtools/courier"
 	"github.com/johnnyeven/libtools/courier/httpx"
+	"github.com/sirupsen/logrus"
 )
 
 func init() {
@@ -22,5 +25,11 @@ func (req GetUserByUserID) Path() string {
 }
 
 func (req GetUserByUserID) Output(ctx context.Context) (result interface{}, err error) {
-	return nil, nil
+	db := global.Config.SlaveDB.Get()
+	u, err := user.GetUserByUserID(req.UserID, db)
+	if err != nil {
+		logrus.Errorf("[GetUserByUserID] user.GetUserByUserID err: %v, request: %+v", err, req)
+		return nil, err
+	}
+	return u, nil
 }

@@ -47,3 +47,14 @@ func GetUsers(params GetUsersParams, db *sqlx.DB) (result database.UserList, cou
 	result, count, err = user.FetchList(db, params.Size, params.Offset, params.Conditions())
 	return
 }
+
+func GetUserByUserID(userID uint64, db *sqlx.DB) (*database.User, error) {
+	user := &database.User{
+		UserID: userID,
+	}
+	err := user.FetchByUserID(db)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}

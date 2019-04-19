@@ -33,7 +33,7 @@ var Config = struct {
 	},
 	Server: transport_http.ServeHTTP{
 		WithCORS: true,
-		Port:     8000,
+		Port:     8001,
 	},
 
 	MasterDB: &mysql.MySQL{
