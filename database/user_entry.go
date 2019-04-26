@@ -8,6 +8,7 @@ import (
 // @def primary ID
 // @def unique_index U_user_entry_id UserEntryID
 // @def unique_index U_entry EntryID ChannelID
+// @def index I_user_id UserID
 type UserEntry struct {
 	presets.PrimaryID
 	// 业务ID

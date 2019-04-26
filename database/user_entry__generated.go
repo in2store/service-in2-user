@@ -75,7 +75,7 @@ func (userEntry *UserEntry) Fields() *UserEntryFields {
 }
 
 func (userEntry *UserEntry) IndexFieldNames() []string {
-	return []string{"ChannelID", "EntryID", "ID", "UserEntryID"}
+	return []string{"ChannelID", "EntryID", "ID", "UserEntryID", "UserID"}
 }
 
 func (userEntry *UserEntry) ConditionByStruct() *github_com_johnnyeven_libtools_sqlx_builder.Condition {
@@ -109,6 +109,9 @@ func (userEntry *UserEntry) ConditionByStruct() *github_com_johnnyeven_libtools_
 
 func (userEntry *UserEntry) PrimaryKey() github_com_johnnyeven_libtools_sqlx.FieldNames {
 	return github_com_johnnyeven_libtools_sqlx.FieldNames{"ID"}
+}
+func (userEntry *UserEntry) Indexes() github_com_johnnyeven_libtools_sqlx.Indexes {
+	return github_com_johnnyeven_libtools_sqlx.Indexes{"I_user_id": github_com_johnnyeven_libtools_sqlx.FieldNames{"UserID"}}
 }
 func (userEntry *UserEntry) UniqueIndexes() github_com_johnnyeven_libtools_sqlx.Indexes {
 	return github_com_johnnyeven_libtools_sqlx.Indexes{
@@ -726,6 +729,32 @@ func (userEntry *UserEntry) BatchFetchByUserEntryIDList(db *github_com_johnnyeve
 
 	stmt := table.Select().
 		Comment("UserEntry.BatchFetchByUserEntryIDList").
+		Where(condition)
+
+	err = db.Do(stmt).Scan(&userEntryList).Err()
+
+	return
+}
+
+// deprecated
+func (userEntryList *UserEntryList) BatchFetchByUserIDList(db *github_com_johnnyeven_libtools_sqlx.DB, userIDList []uint64) (err error) {
+	*userEntryList, err = (&UserEntry{}).BatchFetchByUserIDList(db, userIDList)
+	return
+}
+
+func (userEntry *UserEntry) BatchFetchByUserIDList(db *github_com_johnnyeven_libtools_sqlx.DB, userIDList []uint64) (userEntryList UserEntryList, err error) {
+	if len(userIDList) == 0 {
+		return UserEntryList{}, nil
+	}
+
+	table := userEntry.T()
+
+	condition := table.F("UserID").In(userIDList)
+
+	condition = condition.And(table.F("Enabled").Eq(github_com_johnnyeven_libtools_courier_enumeration.BOOL__TRUE))
+
+	stmt := table.Select().
+		Comment("UserEntry.BatchFetchByUserIDList").
 		Where(condition)
 
 	err = db.Do(stmt).Scan(&userEntryList).Err()
