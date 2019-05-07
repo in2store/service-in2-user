@@ -9,6 +9,7 @@ import (
 )
 
 type CreateUserParams struct {
+	Name    string                  `json:"name"`
 	Entries []CreateUserParamsEntry `json:"entries"`
 }
 
@@ -36,6 +37,7 @@ func CreateUser(req CreateUserParams, db *sqlx.DB, client *client_id.ClientID) (
 		}
 		user = &database.User{
 			UserID: userID,
+			Name:   req.Name,
 		}
 		return user.Create(db)
 	}
